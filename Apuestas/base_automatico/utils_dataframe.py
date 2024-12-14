@@ -7,7 +7,6 @@ scraper = ls.ThreeSixFiveScores()
 
 connection = sql.connect(user='root', password="1104",host="localhost",database="football_project")
 
-
 def extractor_data_match(competition_name, season_name, folder_path, matchday):
     """
     Procesa archivos .txt con nombres mayores al matchday y genera archivos JSON para los datos de los partidos.
@@ -46,10 +45,9 @@ def extractor_data_match(competition_name, season_name, folder_path, matchday):
                             with open(output_file, 'w') as archivo:
                                 json.dump(match, archivo, indent=4)  # Guardar en formato JSON
                                 id += 1
+                        print(f"la jornada {file_matchday} fue extraída exitosamente.")
                 except Exception as e:
                     print(f"Error procesando {file_path}: {e}")
-            print(f"la jornada {file_matchday} fue extraída exitosamente.")
-# extractor_data_match("bundesliga", "2024_2025", 10)
 
 
 def folder_creation_competition(competition_id):
