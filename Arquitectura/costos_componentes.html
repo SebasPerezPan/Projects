@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Bokeh Plot</title>
+    <style>
+      html, body {
+        box-sizing: border-box;
+        display: flow-root;
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+    </style>
+    <script type="text/javascript" src="https://cdn.bokeh.org/bokeh/release/bokeh-3.6.0.min.js"></script>
+    <script type="text/javascript" src="https://cdn.bokeh.org/bokeh/release/bokeh-widgets-3.6.0.min.js"></script>
+    <script type="text/javascript" src="https://cdn.bokeh.org/bokeh/release/bokeh-tables-3.6.0.min.js"></script>
+    <script type="text/javascript">
+        Bokeh.set_log_level("info");
+    </script>
+  </head>
+  <body>
+    <div id="ce16ec95-c11c-4f95-a38c-bd9cb9fc80a6" data-root-id="p1058" style="display: contents;"></div>
+  
+    <script type="application/json" id="c1f1ef29-5e76-4343-b6e6-e85630268e40">
+      {"f7c72f77-3010-4b8b-9c5e-4831f8ff079a":{"version":"3.6.0","title":"Bokeh Application","roots":[{"type":"object","name":"DataTable","id":"p1058","attributes":{"width":800,"height":280,"source":{"type":"object","name":"ColumnDataSource","id":"p1043","attributes":{"selected":{"type":"object","name":"Selection","id":"p1044","attributes":{"indices":[],"line_indices":[]}},"selection_policy":{"type":"object","name":"UnionRenderers","id":"p1045"},"data":{"type":"map","entries":[["componentes",["ESP 32 WIFI BLUETOOTH","DAC","JACK OUTPUT","LECTOR SD","PROTOBOARD","CABLEADO"]],["unidades",[1,1,1,1,1,25]],["valores",[20000,32000,5000,7000,10000,200]],["costos_totales",[20000,32000,5000,7000,10000,5000]]]}}},"view":{"type":"object","name":"CDSView","id":"p1062","attributes":{"filter":{"type":"object","name":"AllIndices","id":"p1063"}}},"columns":[{"type":"object","name":"TableColumn","id":"p1046","attributes":{"field":"componentes","title":"Componente","formatter":{"type":"object","name":"StringFormatter","id":"p1047"},"editor":{"type":"object","name":"StringEditor","id":"p1048"}}},{"type":"object","name":"TableColumn","id":"p1049","attributes":{"field":"unidades","title":"Unidades","formatter":{"type":"object","name":"StringFormatter","id":"p1050"},"editor":{"type":"object","name":"StringEditor","id":"p1051"}}},{"type":"object","name":"TableColumn","id":"p1052","attributes":{"field":"valores","title":"Valor Unitario","formatter":{"type":"object","name":"StringFormatter","id":"p1053"},"editor":{"type":"object","name":"StringEditor","id":"p1054"}}},{"type":"object","name":"TableColumn","id":"p1055","attributes":{"field":"costos_totales","title":"Costo Total","formatter":{"type":"object","name":"StringFormatter","id":"p1056"},"editor":{"type":"object","name":"StringEditor","id":"p1057"}}}]}}]}}
+    </script>
+    <script type="text/javascript">
+      (function() {
+        const fn = function() {
+          Bokeh.safely(function() {
+            (function(root) {
+              function embed_document(root) {
+              const docs_json = document.getElementById('c1f1ef29-5e76-4343-b6e6-e85630268e40').textContent;
+              const render_items = [{"docid":"f7c72f77-3010-4b8b-9c5e-4831f8ff079a","roots":{"p1058":"ce16ec95-c11c-4f95-a38c-bd9cb9fc80a6"},"root_ids":["p1058"]}];
+              root.Bokeh.embed.embed_items(docs_json, render_items);
+              }
+              if (root.Bokeh !== undefined) {
+                embed_document(root);
+              } else {
+                let attempts = 0;
+                const timer = setInterval(function(root) {
+                  if (root.Bokeh !== undefined) {
+                    clearInterval(timer);
+                    embed_document(root);
+                  } else {
+                    attempts++;
+                    if (attempts > 100) {
+                      clearInterval(timer);
+                      console.log("Bokeh: ERROR: Unable to run BokehJS code because BokehJS library is missing");
+                    }
+                  }
+                }, 10, root)
+              }
+            })(window);
+          });
+        };
+        if (document.readyState != "loading") fn();
+        else document.addEventListener("DOMContentLoaded", fn);
+      })();
+    </script>
+  </body>
+</html>
