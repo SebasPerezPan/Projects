@@ -1,9 +1,17 @@
-import pymysql as sql
-import dataframe_builder as sc
-import pandas as pd
 from datetime import datetime
-import json
 import gc
+import json
+
+import pandas as pd
+import pymysql as sql
+
+from modules.dataframe_builder import (
+    create_player_dataframe, 
+    dataframe_stats_match,
+    dataframe_teams
+)
+pd.set_option('display.max_columns', None)
+pd.set_option('display.max_rows', None)
 
 with open('/home/sp3767/Documents/files/credentials.json') as f:
     config = json.load(f)
@@ -67,33 +75,38 @@ def insert_teams(connection, competition_name, season_name, season_id):
     - connection: Conexión a la base de datos usando pymysql.
     - teams: DataFrame de pandas que contiene los datos a insertar.
     """
+
+    cursor = None
     try:
-        teams = sc.dataframe_teams((f"/home/sp3767/Documents/football_data/{competition_name}/{season_name}/match_data"), season_id)
+        teams = dataframe_teams(f"/home/sp3767/Documents/football_data/{competition_name}/{season_name}/match_data", season_id, competition_name)
+        # Reemplazar valores NaN con None
+        teams = teams.where(pd.notna(teams), None)
+        
         # Crear un cursor para realizar la inserción
         cursor = connection.cursor()
-
         # Crear la consulta de inserción
         insert_query = """
-        INSERT INTO team (team_id, team_name, season_id)
-        VALUES (%s, %s, %s)
+        INSERT INTO team (team_id, team_name, season_id, city, stadium)
+        VALUES (%s, %s, %s, %s, %s)
         """
-
+        
         # Convertir el DataFrame a una lista de tuplas para la inserción masiva
-        data_to_insert = list(teams[['team_id', 'team_name', 'season_id']].itertuples(index=False, name=None))
-
+        data_to_insert = list(teams[['team_id', 'team_name', 'season_id', "city", "stadium"]].itertuples(index=False, name=None))
+        
         # Insertar los datos en la tabla
         cursor.executemany(insert_query, data_to_insert)
         connection.commit()
-
+        
         print(f"{len(data_to_insert)} filas insertadas correctamente en la tabla 'team'.")
-
+    
     except Exception as e:
         print(f"Error al insertar los datos: {e}")
         connection.rollback()  # Revertir los cambios en caso de error
-
+    
     finally:
-        cursor.close()  # Cerrar el cursor
-
+        if cursor:
+            cursor.close()
+        
 # MatchDays
 
 def insert_matchdays(connection, weeks, season_id):
@@ -304,6 +317,7 @@ def insert_match_details(connection, dataframe):
             try:
                 cursor.execute(insert_query, (row['match_id'], row['matchday_id'], row['home_team_id'], row['away_team_id'], row['home_score'], row['away_score'], row['duration'], row['season_id']))  # Ajusta las columnas según sea necesario
             except Exception as e:
+                print((row['match_id'], row['matchday_id'], row['home_team_id'], row['away_team_id'], row['home_score'], row['away_score'], row['duration'], row['season_id']))
                 print(f"Error al insertar el partido con ID {row['match_id']}: {e}")
         
         connection.commit()  # Confirmar los cambios en la base de datos
@@ -344,8 +358,8 @@ def get_seasons(connection, competition_id):
     
 def update_season( connection, competition_name, season_name, season_id, matchday):
     cursor = connection.cursor()
-    dataframe_players = sc.create_player_dataframe(competition_name, season_name, season_id, matchday)
-    stats, match = sc.dataframe_stats_match(competition_name,season_name, season_id, matchday)
+    dataframe_players = create_player_dataframe(competition_name, season_name, season_id, matchday)
+    stats, match = dataframe_stats_match(competition_name,season_name, season_id, matchday)
     insert_players(connection, dataframe_players)
     insert_match_details(connection, match) 
     insert_player_stats(connection, stats)

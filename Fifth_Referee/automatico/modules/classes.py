@@ -1,13 +1,24 @@
-import pandas as pd
-from connector import *
-from IPython.display import display, HTML
 from math import pi
-from bokeh.io import show,output_notebook
-from bokeh.models import ColumnDataSource, Select, HoverTool, Div, CustomJS, DataTable, TableColumn, Button
+
+import pandas as pd
+from IPython.display import display, HTML
+
+from bokeh.io import output_notebook, show
+from bokeh.layouts import column, gridplot, row
+from bokeh.models import (
+    Button,
+    ColumnDataSource,
+    CustomJS,
+    DataTable,
+    Div,
+    HoverTool,
+    Select,
+    TableColumn,
+)
 from bokeh.palettes import Category20, Category20c
-from bokeh.plotting import figure, show, figure
-from bokeh.layouts import column, row, gridplot
+from bokeh.plotting import figure
 from bokeh.transform import cumsum
+
 
 class Season:
     def __init__(self, season_id, season_name, competition_id, competition_name):
@@ -320,12 +331,14 @@ class Season:
             row["Posicion"] = str(i + 1)
 
         return pd.DataFrame(standings)
+    
 
     def display_standings(self):
         """
         Muestra una tabla interactiva de clasificación, permitiendo seleccionar la jornada.
         """
-    # Obtener todas las jornadas disponibles
+
+        # Obtener todas las jornadas disponibles
         matchdays = sorted(set(match.matchday_id for team in self.teams for match in team.matches))
 
         if not matchdays:
@@ -338,55 +351,43 @@ class Season:
         initial_visible_matchday = max(visible_matchdays)
         initial_real_matchday = matchday_mapping[str(initial_visible_matchday)]
 
-        # Calcular la tabla inicial de clasificación
         standings_df = self.calculate_standings(matchday=initial_real_matchday)
 
-        # Convertir el DataFrame a tipos serializables
+        # Convertir datos a tipos serializables
         standings_df = standings_df.astype(str)  # Convertir todos los datos a cadenas para evitar problemas de serialización
         source = ColumnDataSource(standings_df)
 
         columns = [
-            TableColumn(field="Posicion", title="Posición"),
-            TableColumn(field="Equipo", title="Equipo"),
-            TableColumn(field="PJ", title="PJ"),
-            TableColumn(field="PG", title="PG"),
-            TableColumn(field="PE", title="PE"),
-            TableColumn(field="PP", title="PP"),
-            TableColumn(field="GF", title="GF"),
-            TableColumn(field="GC", title="GC"),
-            TableColumn(field="DG", title="DG"),
-            TableColumn(field="Puntos", title="Puntos"),  # Nueva columna para mostrar los puntos
+            TableColumn(field="Posicion", title="Position"),
+            TableColumn(field="Equipo", title="Team"),
+            TableColumn(field="PJ", title="Matches"),
+            TableColumn(field="PG", title="Wins"),
+            TableColumn(field="PE", title="Draws"),
+            TableColumn(field="PP", title="Losses"),
+            TableColumn(field="GF", title="Goals"),
+            TableColumn(field="GC", title="G. Conceded"),
+            TableColumn(field="DG", title="G. Balance"),
         ]
 
         data_table = DataTable(source=source, columns=columns, width=800, height=400)
 
-        # Selector para las jornadas
         select = Select(
             title="Jornada:",
             value=str(initial_visible_matchday),
             options=[str(md) for md in visible_matchdays]
         )
 
-        # Botón para actualizar la tabla
-        button = Button(label="Actualizar Clasificación", button_type="primary")
+        callback = CustomJS(args=dict(source=source, matchday_mapping=matchday_mapping), code="""
+            const visible_matchday = cb_obj.value;
+            const real_matchday = matchday_mapping[visible_matchday];
 
-        def update_table():
-            """
-            Actualiza la tabla de clasificación con los datos de la jornada seleccionada.
-            """
-            selected_visible_matchday = int(select.value)
-            selected_real_matchday = matchday_mapping[str(selected_visible_matchday)]
+            // Simulación: Obtén datos desde el servidor o recalcula datos
+            console.log(`Cambiando a jornada ${visible_matchday} (matchday real: ${real_matchday})`);
+            // Aquí deberías reemplazar con una lógica real para actualizar los datos
+        """)
+        select.js_on_change('value', callback)
 
-            # Recalcular la clasificación para la jornada seleccionada
-            updated_standings_df = self.calculate_standings(matchday=selected_real_matchday)
-
-            # Actualizar el ColumnDataSource con los nuevos datos
-            source.data = updated_standings_df.astype(str).to_dict('list')
-
-        button.on_click(update_table)
-
-        # Layout para la tabla y los controles
-        layout = column(row(select, button), data_table)
+        layout = column(select, data_table)
         show(layout)
 
 class Team:

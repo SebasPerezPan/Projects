@@ -1,9 +1,26 @@
-import pymysql as sql
-from datetime import datetime
-import utils_dataframe as pu
-import connector as sq
-import os
 import json
+import os
+from datetime import datetime
+
+import pymysql as sql
+
+from modules.connector import (
+    get_competitions,
+    get_matchday,
+    get_matchday_information,
+    get_seasons,
+    insert_competitions,
+    insert_matchdays,
+    insert_season,
+    insert_teams,
+    update_season,
+)
+from modules.utils_dataframe import (
+    extractor_data_match,
+    folder_creation_competition,
+    folder_creation_season,
+)
+
 
 with open('/home/sp3767/Documents/files/credentials.json') as f:
     config = json.load(f)
@@ -32,7 +49,7 @@ def main_menu():
             competition_options(main_menu)
 
 def competition_options(opcion):
-    competition_list = sq.get_competitions(connection)
+    competition_list = get_competitions(connection)
     if opcion == 1:
         print("Competiciones disponibles:")
         contador = 0
@@ -49,9 +66,9 @@ def competition_options(opcion):
         competition_name = input("Ingresa el nombre de la competición: ").replace(" ","_").lower() 
         existing_competitions = [competition[1] for competition in competition_list]
         if competition_name not in existing_competitions:
-            sq.insert_competitions(connection, competition_name)
+            insert_competitions(connection, competition_name)
             print(f"Competición '{competition_name.replace('_', ' ').title()}' ha sido creada exitosamente.")
-            pu.folder_creation_competition(competition_name)
+            folder_creation_competition(competition_name)
         else:
             print(f"La competición '{competition_name.replace('_', ' ').title()}' ya existe.")
         main_menu()
@@ -61,7 +78,7 @@ def competition_options(opcion):
 ## Temporada:
 
 def season_main_menu(season_options, competition_id, competition_name):
-    season_list = sq.get_seasons(connection, competition_id)
+    season_list = get_seasons(connection, competition_id)
     if season_options == 3:
         main_menu()
     else:
@@ -69,8 +86,8 @@ def season_main_menu(season_options, competition_id, competition_name):
             if len(season_list) < 1:
                 print("No hay temporadas disponibles.")
                 season_name = input("Ingresa la temporada con el formato XXXX/XXXX:").replace("/","_")
-                sq.insert_season(connection, competition_id, season_name)
-                pu.folder_creation_season(competition_name, season_name)
+                insert_season(connection, competition_id, season_name)
+                folder_creation_season(competition_name, season_name)
                 season_main_menu(season_options,competition_id,competition_name)
             else:
                 contador = 0
@@ -79,11 +96,11 @@ def season_main_menu(season_options, competition_id, competition_name):
                     print(f"{contador}. {season[2].replace('_', '/')}")
                 season_choice = int(input("Selecciona una temporada: "))
                 selected_season = list(season_list[season_choice - 1])
-                matchdays = list(sq.get_matchday(connection, selected_season[0]))
+                matchdays = list(get_matchday(connection, selected_season[0]))
             
             if len(matchdays) < 1:
                 matchdays = int(input("Ingresa el número de jornadas: "))
-                sq.insert_matchdays(connection, matchdays, selected_season[0])
+                insert_matchdays(connection, matchdays, selected_season[0])
             selected_teams = [None, None]
             selected_season_menu(selected_season, selected_teams, competition_name)
 
@@ -92,32 +109,33 @@ def season_main_menu(season_options, competition_id, competition_name):
             if season_list:
                 existing_seasons = [season[2] for season in season_list]
                 if season_name not in existing_seasons:
-                    sq.insert_season(connection, competition_id, season_name)
-                    pu.folder_creation_season(competition_name, season_name)
+                    insert_season(connection, competition_id, season_name)
+                    folder_creation_season(competition_name, season_name)
                 else:
                     print(f"La temporada '{season_name.replace('_', ' ').title()}' ya existe.")
 
             else:
-                sq.insert_season(connection, competition_id, season_name)
-                pu.folder_creation_season(competition_name, season_name)
+                insert_season(connection, competition_id, season_name)
+                folder_creation_season(competition_name, season_name)
 
 def selected_season_menu(selected_season, selected_teams, competition_name):
     season_id = int(selected_season[0])
     season_name = selected_season[2]
     folder_path = f"/home/sp3767/Documents/football_data/{competition_name}/{season_name}/jornadas"
     try:
-        matchday_id, last_insert_date, days_since_update =sq.get_matchday_information(connection, season_id)
+        matchday_id, last_insert_date, days_since_update = get_matchday_information(connection, season_id)
         matchday = int(matchday_id) - season_id * 50
         print(f"Ultimo Matchday añadido: {matchday}\nFecha: {last_insert_date}\nDías desde última actualización:{days_since_update}")
     except:
-        matchday = 1
-        sq.insert_teams(connection, competition_name, season_name, season_id)
+        matchday = 0
+        extractor_data_match(competition_name, season_name, folder_path, matchday)
+        insert_teams(connection, competition_name, season_name, season_id)
         print("No hay jornadas disponibles.")
     season_submenu_options = int(input("1. Actualizar información\n2. Regresar al menu principal. \nSelecciona una opción: "))
     if season_submenu_options == 1:
-        pu.extractor_data_match(competition_name, season_name, folder_path, matchday)
+        extractor_data_match(competition_name, season_name, folder_path, matchday)
         try:
-            sq.update_season(connection, competition_name, season_name, season_id, matchday)
+            update_season(connection, competition_name, season_name, season_id, matchday)
         except:
             print("Error al actualizar la información.")
             selected_season_menu(selected_season, selected_teams, competition_name)

@@ -1,5 +1,5 @@
-from connector import *
-from classes import *
+from modules.connector import get_competitions, get_seasons, connection
+from modules.classes import *
 
 def select_and_display_season():
     """
@@ -70,3 +70,4 @@ def select_teams(selected_season):
     except ValueError:
         print("Entrada inválida. Por favor, ingresa un número.")
         return None, None
+

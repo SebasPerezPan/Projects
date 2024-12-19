@@ -1,10 +1,13 @@
-import pandas as pd
-import LanusStats as ls
-import numpy as np
 import json
 import os
 import gc
-import utils_dataframe as utils
+from modules.utils_dataframe import name_stats, reemplazar, reemplazar_categoria, obtener_dataframe_liga, emparejar_equipos
+
+import LanusStats as ls
+import numpy as np
+import pandas as pd
+
+pd.set_option('display.max_columns', None)
 
 scraper = ls.ThreeSixFiveScores()
 
@@ -122,7 +125,7 @@ def extract_stats(file_path):
     - Una lista con todos los valores de la clave "name" encontrados en "stats".
     '''
     lista_categorias_especiales = ['barridas_ganadas', 'centros', 'duelos_aereos_ganados', 'pases_completados', 'pases_largos_completados', 'duelos_en_el_suelo_ganados', 'regates',"penales_atajados"]
-    lista_categorias = utils.name_stats(file_path)
+    lista_categorias = name_stats(file_path)
     player_stats = pd.DataFrame(columns=lista_categorias)
     # Cargar el archivo JSON
     with open(file_path, 'r') as f:
@@ -146,7 +149,7 @@ def extract_stats(file_path):
                 # Recorrer cada entrada en stats y extraer el valor
                 for stat_data in stats:
                     total_stat_name = False
-                    stat_name = utils.reemplazar(stat_data.get('name'))
+                    stat_name = reemplazar(stat_data.get('name'))
                     stat_value = stat_data.get('value', 0)
                     player_data[stat_name] = stat_value
 
@@ -157,7 +160,7 @@ def extract_stats(file_path):
                             try:
                                 stat_value = int(values[0])  # Valor anterior al "/"
                                 total_stat_value = int(values[1].split()[0])  # Valor posterior al "/"
-                                total_stat_name = utils.reemplazar_categoria(stat_name) 
+                                total_stat_name = reemplazar_categoria(stat_name) 
                             except ValueError:
                                 stat_value = 0
                                 total_stat_value = 0
@@ -202,7 +205,40 @@ def teams(file_path, season_id):
         away_team = str(away_competitor.get('name'))
         teams_df.loc[len(teams_df)] = [home_id, home_team, season_id]
         teams_df.loc[len(teams_df)] = [away_id, away_team, season_id]
+
+def teams(file_path, season_id):
+    '''
+    Extracts football team names and ids from a file.
+    parameter: json file. (str)
+    return: Dataframe.
+    '''
+    teams_df = pd.DataFrame(columns=['team_id', 'team_name', "season_id"])
+    with open(file_path, 'r') as f:
+        data = json.load(f)
+
+        # Extraer datos de los equipos
+        home_competitor = data.get('homeCompetitor', {})
+        away_competitor = data.get('awayCompetitor', {})
+        
+        home_id = int(home_competitor.get('id', 0))  # Valor por defecto si no existe
+        away_id = int(away_competitor.get('id', 0))
+        home_team = str(home_competitor.get('name', 'Unknown'))
+        away_team = str(away_competitor.get('name', 'Unknown'))
+        
+        teams_df.loc[len(teams_df)] = [home_id, home_team, season_id]
+        teams_df.loc[len(teams_df)] = [away_id, away_team, season_id]
+        
+        # Obtener league_name de forma segura
+        league_name = data.get('competitionDisplayName', None)
+        
+        if isinstance(league_name, str):  # Solo procesar si es una cadena
+            league_name = league_name.split()[-1]
+        else:
+            print(f"Clave 'competitionDisplayName' no es una cadena en el archivo {file_path}")
+            league_name = "Unknown"
+
     return teams_df
+
 
 # Teams and positions Check if they work:
  
@@ -243,13 +279,22 @@ def dataframe_positions(folder_path, matchday):
     df_concat_positions.drop_duplicates(subset=['id'], inplace=True)
     return df_concat_positions
 
-def dataframe_teams(folder_path, season_id):
+def dataframe_teams(folder_path, season_id, league_name):
     '''
-        Applies the function teams and positions to all the files in a folder.
-        parameter: folder (str).
-        return: Dataframe.
+    Processes all JSON files in a folder to extract team information,
+    updates city and stadium data with matched team names, and merges both DataFrames.
+
+    Parameters:
+        folder_path (str): Path to the folder containing JSON files.
+        season_id (int): Season ID for the data being processed.
+        league_name (str): Name of the league for API lookup.
+
+    Returns:
+        pd.DataFrame: Final merged DataFrame with team_id, team_name, season_id, city, and stadium.
     '''
+    # Paso 1: Crear DataFrame vacío y extraer equipos desde archivos JSON
     df_concat_teams = pd.DataFrame()
+
     for root, _, files in os.walk(folder_path):
         for file_name in files:
             if file_name.endswith('.json'):
@@ -261,10 +306,20 @@ def dataframe_teams(folder_path, season_id):
                     print(f"Error procesando {file_path}: {e}")
 
     df_concat_teams.drop_duplicates(subset=['team_id'], inplace=True)
+    df_city_stadium = obtener_dataframe_liga(league_name.replace("_", " "))
+    matches = emparejar_equipos(df_city_stadium, df_concat_teams, "team", "team_name")
 
-    return df_concat_teams
-
-# constructor de player dataframe (positions + players)
+    team_name_mapping = dict(zip(matches['team'], matches['team_name']))
+    df_city_stadium = df_city_stadium.rename(columns={"team": "team_name"})
+    df_city_stadium['team_name'] = df_city_stadium['team_name'].replace(team_name_mapping)
+    # Paso 4: Fusionar los DataFrames actualizados
+    df_teams = pd.merge(
+        df_concat_teams, 
+        df_city_stadium, 
+        on="team_name", 
+        how="left"
+    )
+    return df_teams
 
 def create_player_dataframe(competition_name, season_name, season_id, matchday):
     try:
