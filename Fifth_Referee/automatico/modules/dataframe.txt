@@ -1,0 +1,751 @@
+   barridas_totales centros_totales duelos_aereos_totales  \
+0                 0               0                     0   
+1                 4               1                     0   
+2                 2               0                     4   
+3                 2               0                     7   
+4                 1               0                     0   
+5                 0               0                     0   
+6                 0               1                     2   
+7                 0               3                     0   
+8                 6               5                     0   
+9                 0               0                     0   
+10                0               0                     6   
+11                1               0                     0   
+12                0               0                     0   
+13                0               0                     0   
+14                0               0                     0   
+15                0               1                     0   
+16                0               0                     0   
+17                0               0                     0   
+18                0               0                     0   
+19                0               0                     0   
+20                0               0                     0   
+21                0               0                     0   
+22                0               0                     0   
+23                0               0                     0   
+24                1               0                     0   
+25                0               0                     7   
+26                4               2                     0   
+27                0               4                     2   
+28                2               0                     4   
+29                0               0                     2   
+30                0               5                     0   
+31                4               0                     0   
+32                0               0                     0   
+33                0               1                     5   
+34                0               0                     0   
+35                0               0                     0   
+36                0               0                     0   
+37                0               0                     0   
+38                0               0                     0   
+39                0               0                     0   
+40                0               0                     0   
+41                0               0                     0   
+42                0               0                     0   
+43                0               0                     0   
+44                0               0                     0   
+
+   duelos_en_el_suelo_totales match_id pases_largos_totales pases_totales  \
+0                           0  4167384                   20            49   
+1                           0  4167384                    2            35   
+2                           3  4167384                    4            57   
+3                           5  4167384                    0            53   
+4                           0  4167384                    0            39   
+5                           0  4167384                    4            47   
+6                           4  4167384                    0            38   
+7                           0  4167384                    2            22   
+8                           0  4167384                    8            56   
+9                           0  4167384                    0            25   
+10                         11  4167384                    0            16   
+11                          0  4167384                    0             0   
+12                          0  4167384                    0             0   
+13                          0  4167384                    0             1   
+14                          0  4167384                    0             2   
+15                          0  4167384                    0             3   
+16                          0  4167384                    0             0   
+17                          0  4167384                    0             0   
+18                          0  4167384                    0             0   
+19                          0  4167384                    0             0   
+20                          0  4167384                    0             0   
+21                          0  4167384                    0             0   
+22                          0  4167384                    0             0   
+23                          0  4167384                   12            20   
+24                          0  4167384                    3            67   
+25                          3  4167384                    3            77   
+26                          0  4167384                    9            69   
+27                          3  4167384                    0            40   
+28                          7  4167384                    0            55   
+29                          2  4167384                    5           104   
+30                          0  4167384                    0            27   
+31                          0  4167384                    4            63   
+32                          0  4167384                    1            35   
+33                          8  4167384                    0            10   
+34                          0  4167384                    0             7   
+35                          0  4167384                    0            26   
+36                          0  4167384                    0            12   
+37                          0  4167384                    0             0   
+38                          0  4167384                    0             0   
+39                          0  4167384                    0             0   
+40                          0  4167384                    0             0   
+41                          0  4167384                    0             0   
+42                          0  4167384                    0             0   
+43                          0  4167384                    0             0   
+44                          0  4167384                    0             0   
+
+   penales_totales player_id regates_totales barridas_ganadas centros  \
+0                0    552504               0                0       0   
+1                0  50966634               2                2       1   
+2                0    540689               0                1       0   
+3                0  13366904               0                1       0   
+4                0   8448849               0                1       0   
+5                0    493035               0                0       0   
+6                0  51131240               1                0       1   
+7                0    489253               1                0       1   
+8                0    502580               2                3       1   
+9                0    430398               0                0       0   
+10               0    373632               0                0       0   
+11               0  64329313               0                1       0   
+12               0    394721               0                0       0   
+13               0  18041251               0                0       0   
+14               0  32435492               0                0       0   
+15               0  50730203               0                0       1   
+16               0    476035               0                0       0   
+17               0   4632964               0                0       0   
+18               0   3094154               0                0       0   
+19               0    972964               0                0       0   
+20               0  50548216               0                0       0   
+21               0  62450358               0                0       0   
+22               0   6573934               0                0       0   
+23               0    386642               0                0       0   
+24               0  50457607               0                1       0   
+25               0    412127               1                0       0   
+26               0  30803774               0                3       1   
+27               0    527341               0                0       3   
+28               0   3085403               0                1       0   
+29               0    287803               0                0       0   
+30               0  39079546               0                0       1   
+31               0  49449655               0                2       0   
+32               0    342440               0                0       0   
+33               0  38971849               3                0       1   
+34               0  44382887               0                0       0   
+35               0    613840               0                0       0   
+36               0   3173630               0                0       0   
+37               0  64816557               0                0       0   
+38               0  26310296               0                0       0   
+39               0  43467357               0                0       0   
+40               0    511863               0                0       0   
+41               0  49633242               0                0       0   
+42               0  65328217               0                0       0   
+43               0   1140554               0                0       0   
+44               0     78005               0                0       0   
+
+   duelos_aereos_ganados pases_completados pases_largos_completados  \
+0                      0                38                        9   
+1                      0                31                        1   
+2                      2                50                        1   
+3                      4                44                        0   
+4                      0                33                        0   
+5                      0                39                        3   
+6                      1                32                        0   
+7                      0                19                        1   
+8                      0                49                        8   
+9                      0                17                        0   
+10                     2                10                        0   
+11                     0                 0                        0   
+12                     0                 0                        0   
+13                     0                 1                        0   
+14                     0                 1                        0   
+15                     0                 2                        0   
+16                     0                 0                        0   
+17                     0                 0                        0   
+18                     0                 0                        0   
+19                     0                 0                        0   
+20                     0                 0                        0   
+21                     0                 0                        0   
+22                     0                 0                        0   
+23                     0                13                        5   
+24                     0                56                        1   
+25                     5                73                        3   
+26                     0                61                        5   
+27                     1                35                        0   
+28                     3                46                        0   
+29                     1                98                        2   
+30                     0                23                        0   
+31                     0                47                        2   
+32                     0                29                        1   
+33                     2                 6                        0   
+34                     0                 6                        0   
+35                     0                24                        0   
+36                     0                11                        0   
+37                     0                 0                        0   
+38                     0                 0                        0   
+39                     0                 0                        0   
+40                     0                 0                        0   
+41                     0                 0                        0   
+42                     0                 0                        0   
+43                     0                 0                        0   
+44                     0                 0                        0   
+
+   duelos_en_el_suelo_ganados regates  penales_atajados  team_id  minutes  \
+0                           0       0               1.0    349.0     90.0   
+1                           0       1               0.0    349.0     90.0   
+2                           2       0               0.0    349.0     90.0   
+3                           2       0               0.0    349.0     90.0   
+4                           0       0               0.0    349.0     90.0   
+5                           0       0               0.0    349.0     90.0   
+6                           2       1               0.0    349.0     70.0   
+7                           0       1               0.0    349.0     70.0   
+8                           0       1               0.0    349.0     90.0   
+9                           0       0               0.0    349.0     90.0   
+10                          2       0               0.0    349.0     90.0   
+11                          0       0               0.0    349.0      1.0   
+12                          0       0               0.0    349.0      1.0   
+13                          0       0               0.0    349.0      1.0   
+14                          0       0               0.0    349.0     20.0   
+15                          0       0               0.0    349.0     20.0   
+16                          0       0               0.0    349.0      NaN   
+17                          0       0               0.0    349.0      NaN   
+18                          0       0               0.0    349.0      NaN   
+19                          0       0               0.0    349.0      NaN   
+20                          0       0               0.0    349.0      NaN   
+21                          0       0               0.0    349.0      NaN   
+22                          0       0               0.0    349.0      NaN   
+23                          0       0               0.0    333.0     90.0   
+24                          0       0               0.0    333.0     90.0   
+25                          2       1               0.0    333.0     90.0   
+26                          0       0               0.0    333.0     90.0   
+27                          1       0               0.0    333.0     90.0   
+28                          4       0               0.0    333.0     81.0   
+29                          1       0               0.0    333.0     90.0   
+30                          0       0               0.0    333.0     90.0   
+31                          0       0               0.0    333.0     90.0   
+32                          0       0               0.0    333.0     64.0   
+33                          2       2               0.0    333.0     81.0   
+34                          0       0               0.0    333.0      9.0   
+35                          0       0               0.0    333.0      9.0   
+36                          0       0               0.0    333.0     26.0   
+37                          0       0               0.0    333.0      NaN   
+38                          0       0               0.0    333.0      NaN   
+39                          0       0               0.0    333.0      NaN   
+40                          0       0               0.0    333.0      NaN   
+41                          0       0               0.0    333.0      NaN   
+42                          0       0               0.0    333.0      NaN   
+43                          0       0               0.0    333.0      NaN   
+44                          0       0               0.0    333.0      NaN   
+
+    salvadas_de_portero  goles  asistencias  goles_recibidos  total_remates  \
+0                   7.0    0.0          0.0              3.0            0.0   
+1                   NaN    0.0          0.0              NaN            1.0   
+2                   NaN    1.0          0.0              NaN            2.0   
+3                   NaN    0.0          0.0              NaN            0.0   
+4                   NaN    0.0          0.0              NaN            0.0   
+5                   NaN    0.0          0.0              NaN            1.0   
+6                   NaN    0.0          0.0              NaN            3.0   
+7                   NaN    0.0          0.0              NaN            0.0   
+8                   NaN    0.0          1.0              NaN            0.0   
+9                   NaN    0.0          0.0              NaN            2.0   
+10                  NaN    1.0          0.0              NaN            4.0   
+11                  NaN    0.0          0.0              NaN            0.0   
+12                  NaN    0.0          0.0              NaN            0.0   
+13                  NaN    0.0          0.0              NaN            1.0   
+14                  NaN    0.0          0.0              NaN            0.0   
+15                  NaN    0.0          0.0              NaN            0.0   
+16                  NaN    NaN          NaN              NaN            NaN   
+17                  NaN    NaN          NaN              NaN            NaN   
+18                  NaN    NaN          NaN              NaN            NaN   
+19                  NaN    NaN          NaN              NaN            NaN   
+20                  NaN    NaN          NaN              NaN            NaN   
+21                  NaN    NaN          NaN              NaN            NaN   
+22                  NaN    NaN          NaN              NaN            NaN   
+23                  5.0    0.0          0.0              2.0            0.0   
+24                  NaN    0.0          0.0              NaN            0.0   
+25                  NaN    0.0          0.0              NaN            3.0   
+26                  NaN    0.0          0.0              NaN            1.0   
+27                  NaN    0.0          0.0              NaN            4.0   
+28                  NaN    0.0          0.0              NaN            1.0   
+29                  NaN    1.0          0.0              NaN            2.0   
+30                  NaN    0.0          0.0              NaN            1.0   
+31                  NaN    2.0          0.0              NaN            4.0   
+32                  NaN    0.0          0.0              NaN            1.0   
+33                  NaN    0.0          0.0              NaN            5.0   
+34                  NaN    0.0          0.0              NaN            1.0   
+35                  NaN    0.0          0.0              NaN            0.0   
+36                  NaN    0.0          0.0              NaN            2.0   
+37                  NaN    NaN          NaN              NaN            NaN   
+38                  NaN    NaN          NaN              NaN            NaN   
+39                  NaN    NaN          NaN              NaN            NaN   
+40                  NaN    NaN          NaN              NaN            NaN   
+41                  NaN    NaN          NaN              NaN            NaN   
+42                  NaN    NaN          NaN              NaN            NaN   
+43                  NaN    NaN          NaN              NaN            NaN   
+44                  NaN    NaN          NaN              NaN            NaN   
+
+    fueras_de_juego  asistencias_esperadas  pases_claves  \
+0               0.0               0.000610           0.0   
+1               0.0               0.079000           1.0   
+2               0.0               0.049000           1.0   
+3               0.0               0.400000           1.0   
+4               0.0               0.012000           0.0   
+5               0.0               0.039000           2.0   
+6               0.0               0.008500           0.0   
+7               0.0               0.160000           0.0   
+8               0.0               0.120000           3.0   
+9               1.0               0.005700           1.0   
+10              1.0               0.180000           0.0   
+11              0.0                    NaN           0.0   
+12              0.0                    NaN           0.0   
+13              0.0               0.000011           0.0   
+14              0.0               0.000700           0.0   
+15              0.0               0.041000           1.0   
+16              NaN                    NaN           NaN   
+17              NaN                    NaN           NaN   
+18              NaN                    NaN           NaN   
+19              NaN                    NaN           NaN   
+20              NaN                    NaN           NaN   
+21              NaN                    NaN           NaN   
+22              NaN                    NaN           NaN   
+23              0.0               0.000290           0.0   
+24              0.0               0.018000           0.0   
+25              0.0               0.027000           0.0   
+26              0.0               0.074000           0.0   
+27              0.0               0.190000           4.0   
+28              0.0               0.053000           1.0   
+29              0.0               0.360000           5.0   
+30              0.0               0.065000           0.0   
+31              0.0               0.260000           3.0   
+32              0.0               0.031000           0.0   
+33              0.0               0.044000           2.0   
+34              0.0               0.018000           0.0   
+35              0.0               0.022000           0.0   
+36              0.0               0.030000           0.0   
+37              NaN                    NaN           NaN   
+38              NaN                    NaN           NaN   
+39              NaN                    NaN           NaN   
+40              NaN                    NaN           NaN   
+41              NaN                    NaN           NaN   
+42              NaN                    NaN           NaN   
+43              NaN                    NaN           NaN   
+44              NaN                    NaN           NaN   
+
+    pases_en_el_ultimo_tercio  pases_hacia_atras  toques  faltas_recibidas  \
+0                         2.0                0.0    62.0               0.0   
+1                         1.0               11.0    61.0               0.0   
+2                         4.0                7.0    68.0               0.0   
+3                         2.0                4.0    70.0               0.0   
+4                         2.0                4.0    62.0               1.0   
+5                         6.0                6.0    64.0               1.0   
+6                         1.0                9.0    53.0               0.0   
+7                         1.0                8.0    33.0               2.0   
+8                         9.0                8.0    82.0               2.0   
+9                         3.0                6.0    37.0               0.0   
+10                        0.0                5.0    32.0               1.0   
+11                        0.0                0.0     1.0               0.0   
+12                        0.0                0.0     1.0               0.0   
+13                        0.0                1.0     3.0               0.0   
+14                        1.0                0.0    10.0               0.0   
+15                        0.0                0.0     5.0               0.0   
+16                        NaN                NaN     NaN               NaN   
+17                        NaN                NaN     NaN               NaN   
+18                        NaN                NaN     NaN               NaN   
+19                        NaN                NaN     NaN               NaN   
+20                        NaN                NaN     NaN               NaN   
+21                        NaN                NaN     NaN               NaN   
+22                        NaN                NaN     NaN               NaN   
+23                        1.0                0.0    31.0               0.0   
+24                        3.0                4.0    82.0               1.0   
+25                        7.0                2.0    90.0               0.0   
+26                        9.0                9.0    90.0               0.0   
+27                        3.0               12.0    59.0               1.0   
+28                        8.0               14.0    66.0               2.0   
+29                       18.0               17.0   117.0               1.0   
+30                        0.0                9.0    47.0               2.0   
+31                        4.0               12.0    81.0               1.0   
+32                        1.0               16.0    40.0               1.0   
+33                        1.0                6.0    32.0               0.0   
+34                        0.0                4.0    14.0               2.0   
+35                        2.0                2.0    27.0               0.0   
+36                        0.0                6.0    16.0               0.0   
+37                        NaN                NaN     NaN               NaN   
+38                        NaN                NaN     NaN               NaN   
+39                        NaN                NaN     NaN               NaN   
+40                        NaN                NaN     NaN               NaN   
+41                        NaN                NaN     NaN               NaN   
+42                        NaN                NaN     NaN               NaN   
+43                        NaN                NaN     NaN               NaN   
+44                        NaN                NaN     NaN               NaN   
+
+    goles_esperados_al_arco_concedidos  goles_esperados_evitados  \
+0                                  3.0                     -0.03   
+1                                  NaN                       NaN   
+2                                  NaN                       NaN   
+3                                  NaN                       NaN   
+4                                  NaN                       NaN   
+5                                  NaN                       NaN   
+6                                  NaN                       NaN   
+7                                  NaN                       NaN   
+8                                  NaN                       NaN   
+9                                  NaN                       NaN   
+10                                 NaN                       NaN   
+11                                 NaN                       NaN   
+12                                 NaN                       NaN   
+13                                 NaN                       NaN   
+14                                 NaN                       NaN   
+15                                 NaN                       NaN   
+16                                 NaN                       NaN   
+17                                 NaN                       NaN   
+18                                 NaN                       NaN   
+19                                 NaN                       NaN   
+20                                 NaN                       NaN   
+21                                 NaN                       NaN   
+22                                 NaN                       NaN   
+23                                 2.5                      0.53   
+24                                 NaN                       NaN   
+25                                 NaN                       NaN   
+26                                 NaN                       NaN   
+27                                 NaN                       NaN   
+28                                 NaN                       NaN   
+29                                 NaN                       NaN   
+30                                 NaN                       NaN   
+31                                 NaN                       NaN   
+32                                 NaN                       NaN   
+33                                 NaN                       NaN   
+34                                 NaN                       NaN   
+35                                 NaN                       NaN   
+36                                 NaN                       NaN   
+37                                 NaN                       NaN   
+38                                 NaN                       NaN   
+39                                 NaN                       NaN   
+40                                 NaN                       NaN   
+41                                 NaN                       NaN   
+42                                 NaN                       NaN   
+43                                 NaN                       NaN   
+44                                 NaN                       NaN   
+
+    faltas_cometidas  posesiones_perdidas  regateado  despeje_con_los_punos  \
+0                0.0                 11.0        0.0                    1.0   
+1                0.0                  7.0        1.0                    NaN   
+2                1.0                  7.0        0.0                    NaN   
+3                1.0                 12.0        1.0                    NaN   
+4                0.0                 11.0        0.0                    NaN   
+5                0.0                  9.0        0.0                    NaN   
+6                1.0                  8.0        0.0                    NaN   
+7                0.0                  7.0        0.0                    NaN   
+8                1.0                 14.0        0.0                    NaN   
+9                1.0                 12.0        1.0                    NaN   
+10               4.0                 13.0        0.0                    NaN   
+11               0.0                  NaN        0.0                    NaN   
+12               1.0                  1.0        0.0                    NaN   
+13               0.0                  1.0        0.0                    NaN   
+14               1.0                  1.0        0.0                    NaN   
+15               0.0                  1.0        0.0                    NaN   
+16               NaN                  NaN        NaN                    NaN   
+17               NaN                  NaN        NaN                    NaN   
+18               NaN                  NaN        NaN                    NaN   
+19               NaN                  NaN        NaN                    NaN   
+20               NaN                  NaN        NaN                    NaN   
+21               NaN                  NaN        NaN                    NaN   
+22               NaN                  NaN        NaN                    NaN   
+23               0.0                  7.0        0.0                    0.0   
+24               0.0                 12.0        1.0                    NaN   
+25               0.0                  5.0        0.0                    NaN   
+26               3.0                 13.0        0.0                    NaN   
+27               0.0                 10.0        0.0                    NaN   
+28               3.0                  9.0        0.0                    NaN   
+29               0.0                 10.0        0.0                    NaN   
+30               0.0                 12.0        2.0                    NaN   
+31               0.0                 23.0        1.0                    NaN   
+32               0.0                  8.0        0.0                    NaN   
+33               1.0                 16.0        0.0                    NaN   
+34               0.0                  3.0        0.0                    NaN   
+35               0.0                  3.0        0.0                    NaN   
+36               0.0                  2.0        0.0                    NaN   
+37               NaN                  NaN        NaN                    NaN   
+38               NaN                  NaN        NaN                    NaN   
+39               NaN                  NaN        NaN                    NaN   
+40               NaN                  NaN        NaN                    NaN   
+41               NaN                  NaN        NaN                    NaN   
+42               NaN                  NaN        NaN                    NaN   
+43               NaN                  NaN        NaN                    NaN   
+44               NaN                  NaN        NaN                    NaN   
+
+    despejes  intercepciones  recuperacion_de_la_posesion  goles_esperados  \
+0        1.0             0.0                          9.0              NaN   
+1        2.0             4.0                          1.0            0.039   
+2        4.0             1.0                          0.0            0.700   
+3        7.0             0.0                          1.0              NaN   
+4        3.0             0.0                          5.0              NaN   
+5        5.0             5.0                          3.0            0.032   
+6        1.0             3.0                          2.0            0.310   
+7        1.0             0.0                          3.0              NaN   
+8        2.0             2.0                          4.0              NaN   
+9        2.0             0.0                          5.0            0.150   
+10       1.0             0.0                          2.0            0.330   
+11       0.0             0.0                          0.0              NaN   
+12       0.0             0.0                          0.0              NaN   
+13       0.0             0.0                          0.0            0.018   
+14       1.0             1.0                          0.0              NaN   
+15       0.0             0.0                          0.0              NaN   
+16       NaN             NaN                          NaN              NaN   
+17       NaN             NaN                          NaN              NaN   
+18       NaN             NaN                          NaN              NaN   
+19       NaN             NaN                          NaN              NaN   
+20       NaN             NaN                          NaN              NaN   
+21       NaN             NaN                          NaN              NaN   
+22       NaN             NaN                          NaN              NaN   
+23       1.0             0.0                          8.0              NaN   
+24       2.0             1.0                          1.0              NaN   
+25       4.0             1.0                          6.0            0.140   
+26       4.0             0.0                          5.0            0.038   
+27       0.0             0.0                          2.0            0.330   
+28       2.0             0.0                          6.0            0.028   
+29       1.0             1.0                          7.0            0.058   
+30       0.0             1.0                          4.0            0.320   
+31       0.0             0.0                          4.0            1.100   
+32       1.0             0.0                          4.0            0.140   
+33       0.0             0.0                          0.0            0.350   
+34       0.0             0.0                          0.0            0.095   
+35       0.0             0.0                          0.0              NaN   
+36       0.0             0.0                          0.0            0.120   
+37       NaN             NaN                          NaN              NaN   
+38       NaN             NaN                          NaN              NaN   
+39       NaN             NaN                          NaN              NaN   
+40       NaN             NaN                          NaN              NaN   
+41       NaN             NaN                          NaN              NaN   
+42       NaN             NaN                          NaN              NaN   
+43       NaN             NaN                          NaN              NaN   
+44       NaN             NaN                          NaN              NaN   
+
+    remates_fuera  remates_a_puerta  goles_esperados_de_remates_al_arco  \
+0             NaN               NaN                                 NaN   
+1             1.0               NaN                                 NaN   
+2             NaN               2.0                                1.12   
+3             NaN               NaN                                 NaN   
+4             NaN               NaN                                 NaN   
+5             1.0               NaN                                 NaN   
+6             NaN               2.0                                0.71   
+7             NaN               NaN                                 NaN   
+8             NaN               NaN                                 NaN   
+9             NaN               NaN                                 NaN   
+10            NaN               2.0                                0.68   
+11            NaN               NaN                                 NaN   
+12            NaN               NaN                                 NaN   
+13            NaN               1.0                                0.02   
+14            NaN               NaN                                 NaN   
+15            NaN               NaN                                 NaN   
+16            NaN               NaN                                 NaN   
+17            NaN               NaN                                 NaN   
+18            NaN               NaN                                 NaN   
+19            NaN               NaN                                 NaN   
+20            NaN               NaN                                 NaN   
+21            NaN               NaN                                 NaN   
+22            NaN               NaN                                 NaN   
+23            NaN               NaN                                 NaN   
+24            NaN               NaN                                 NaN   
+25            1.0               2.0                                0.23   
+26            1.0               NaN                                 NaN   
+27            2.0               1.0                                0.18   
+28            NaN               NaN                                 NaN   
+29            1.0               1.0                                0.21   
+30            NaN               1.0                                0.21   
+31            NaN               3.0                                1.82   
+32            NaN               1.0                                0.11   
+33            3.0               NaN                                 NaN   
+34            NaN               NaN                                 NaN   
+35            NaN               NaN                                 NaN   
+36            NaN               1.0                                0.21   
+37            NaN               NaN                                 NaN   
+38            NaN               NaN                                 NaN   
+39            NaN               NaN                                 NaN   
+40            NaN               NaN                                 NaN   
+41            NaN               NaN                                 NaN   
+42            NaN               NaN                                 NaN   
+43            NaN               NaN                                 NaN   
+44            NaN               NaN                                 NaN   
+
+    chances_perdidas  big_chances_scored  grandes_chances  penales_cometidos  \
+0                NaN                 NaN              NaN                NaN   
+1                NaN                 NaN              NaN                NaN   
+2                1.0                 1.0              NaN                NaN   
+3                NaN                 NaN              1.0                1.0   
+4                NaN                 NaN              NaN                NaN   
+5                NaN                 NaN              NaN                NaN   
+6                NaN                 NaN              NaN                NaN   
+7                NaN                 NaN              NaN                NaN   
+8                NaN                 NaN              NaN                NaN   
+9                NaN                 NaN              NaN                NaN   
+10               NaN                 NaN              NaN                NaN   
+11               NaN                 NaN              NaN                NaN   
+12               NaN                 NaN              NaN                NaN   
+13               NaN                 NaN              NaN                NaN   
+14               NaN                 NaN              NaN                NaN   
+15               NaN                 NaN              NaN                NaN   
+16               NaN                 NaN              NaN                NaN   
+17               NaN                 NaN              NaN                NaN   
+18               NaN                 NaN              NaN                NaN   
+19               NaN                 NaN              NaN                NaN   
+20               NaN                 NaN              NaN                NaN   
+21               NaN                 NaN              NaN                NaN   
+22               NaN                 NaN              NaN                NaN   
+23               NaN                 NaN              NaN                NaN   
+24               NaN                 NaN              NaN                NaN   
+25               NaN                 NaN              NaN                NaN   
+26               NaN                 NaN              NaN                NaN   
+27               1.0                 NaN              NaN                NaN   
+28               NaN                 NaN              NaN                NaN   
+29               NaN                 NaN              1.0                NaN   
+30               1.0                 NaN              NaN                NaN   
+31               1.0                 1.0              1.0                NaN   
+32               NaN                 NaN              NaN                NaN   
+33               NaN                 NaN              NaN                NaN   
+34               NaN                 NaN              NaN                NaN   
+35               NaN                 NaN              NaN                NaN   
+36               NaN                 NaN              NaN                NaN   
+37               NaN                 NaN              NaN                NaN   
+38               NaN                 NaN              NaN                NaN   
+39               NaN                 NaN              NaN                NaN   
+40               NaN                 NaN              NaN                NaN   
+41               NaN                 NaN              NaN                NaN   
+42               NaN                 NaN              NaN                NaN   
+43               NaN                 NaN              NaN                NaN   
+44               NaN                 NaN              NaN                NaN   
+
+    errores_que_terminan_el_disparo  posesiones_ganadas_en_el_ultimo_tercio  \
+0                               NaN                                     NaN   
+1                               NaN                                     NaN   
+2                               NaN                                     NaN   
+3                               NaN                                     NaN   
+4                               1.0                                     NaN   
+5                               NaN                                     1.0   
+6                               NaN                                     NaN   
+7                               NaN                                     2.0   
+8                               NaN                                     NaN   
+9                               NaN                                     NaN   
+10                              NaN                                     1.0   
+11                              NaN                                     NaN   
+12                              NaN                                     NaN   
+13                              NaN                                     NaN   
+14                              NaN                                     NaN   
+15                              NaN                                     NaN   
+16                              NaN                                     NaN   
+17                              NaN                                     NaN   
+18                              NaN                                     NaN   
+19                              NaN                                     NaN   
+20                              NaN                                     NaN   
+21                              NaN                                     NaN   
+22                              NaN                                     NaN   
+23                              NaN                                     NaN   
+24                              NaN                                     NaN   
+25                              NaN                                     NaN   
+26                              NaN                                     NaN   
+27                              NaN                                     1.0   
+28                              NaN                                     1.0   
+29                              NaN                                     NaN   
+30                              NaN                                     NaN   
+31                              NaN                                     NaN   
+32                              NaN                                     NaN   
+33                              NaN                                     NaN   
+34                              NaN                                     NaN   
+35                              NaN                                     NaN   
+36                              NaN                                     NaN   
+37                              NaN                                     NaN   
+38                              NaN                                     NaN   
+39                              NaN                                     NaN   
+40                              NaN                                     NaN   
+41                              NaN                                     NaN   
+42                              NaN                                     NaN   
+43                              NaN                                     NaN   
+44                              NaN                                     NaN   
+
+    remates_bloqueados  despejes_por_alto  pelotas_al_poste  penal_fallado  \
+0                  NaN                NaN               NaN            NaN   
+1                  NaN                NaN               NaN            NaN   
+2                  NaN                NaN               NaN            NaN   
+3                  NaN                NaN               NaN            NaN   
+4                  NaN                NaN               NaN            NaN   
+5                  NaN                NaN               NaN            NaN   
+6                  1.0                NaN               NaN            NaN   
+7                  NaN                NaN               NaN            NaN   
+8                  NaN                NaN               NaN            NaN   
+9                  2.0                NaN               NaN            NaN   
+10                 2.0                NaN               NaN            NaN   
+11                 NaN                NaN               NaN            NaN   
+12                 NaN                NaN               NaN            NaN   
+13                 NaN                NaN               NaN            NaN   
+14                 NaN                NaN               NaN            NaN   
+15                 NaN                NaN               NaN            NaN   
+16                 NaN                NaN               NaN            NaN   
+17                 NaN                NaN               NaN            NaN   
+18                 NaN                NaN               NaN            NaN   
+19                 NaN                NaN               NaN            NaN   
+20                 NaN                NaN               NaN            NaN   
+21                 NaN                NaN               NaN            NaN   
+22                 NaN                NaN               NaN            NaN   
+23                 NaN                1.0               NaN            NaN   
+24                 NaN                NaN               NaN            NaN   
+25                 NaN                NaN               NaN            NaN   
+26                 NaN                NaN               1.0            NaN   
+27                 1.0                NaN               NaN            NaN   
+28                 1.0                NaN               NaN            NaN   
+29                 NaN                NaN               NaN            NaN   
+30                 NaN                NaN               NaN            NaN   
+31                 1.0                NaN               NaN            1.0   
+32                 NaN                NaN               NaN            NaN   
+33                 2.0                NaN               1.0            NaN   
+34                 1.0                NaN               NaN            NaN   
+35                 NaN                NaN               NaN            NaN   
+36                 1.0                NaN               NaN            NaN   
+37                 NaN                NaN               NaN            NaN   
+38                 NaN                NaN               NaN            NaN   
+39                 NaN                NaN               NaN            NaN   
+40                 NaN                NaN               NaN            NaN   
+41                 NaN                NaN               NaN            NaN   
+42                 NaN                NaN               NaN            NaN   
+43                 NaN                NaN               NaN            NaN   
+44                 NaN                NaN               NaN            NaN   
+
+    penales_ganados  
+0               NaN  
+1               NaN  
+2               NaN  
+3               NaN  
+4               NaN  
+5               NaN  
+6               NaN  
+7               NaN  
+8               NaN  
+9               NaN  
+10              NaN  
+11              NaN  
+12              NaN  
+13              NaN  
+14              NaN  
+15              NaN  
+16              NaN  
+17              NaN  
+18              NaN  
+19              NaN  
+20              NaN  
+21              NaN  
+22              NaN  
+23              NaN  
+24              NaN  
+25              NaN  
+26              NaN  
+27              NaN  
+28              NaN  
+29              NaN  
+30              NaN  
+31              NaN  
+32              NaN  
+33              NaN  
+34              1.0  
+35              NaN  
+36              NaN  
+37              NaN  
+38              NaN  
+39              NaN  
+40              NaN  
+41              NaN  
+42              NaN  
+43              NaN  
+44              NaN  

@@ -112,80 +112,81 @@ def positions (file_path):
                     position = "Couch"
                 positions_df.loc[len(positions_df)] = [player_id, position]
     return positions_df
-
-## player_stats dataframe
 def extract_stats(file_path):
-    '''
-    Extrae los stats de cada miembro del equipo en homeCompetitor y awayCompetitor.
-    
+    """
+    Extrae estadísticas de jugadores de cada equipo en homeCompetitor y awayCompetitor de un archivo JSON.
+
     Parámetro:
-    - file_path (str): La ruta del archivo JSON.
-    
+        - file_path (str): Ruta del archivo JSON.
+
     Retorna:
-    - Una lista con todos los valores de la clave "name" encontrados en "stats".
-    '''
-    lista_categorias_especiales = ['barridas_ganadas', 'centros', 'duelos_aereos_ganados', 'pases_completados', 'pases_largos_completados', 'duelos_en_el_suelo_ganados', 'regates',"penales_atajados"]
-    lista_categorias = name_stats(file_path)
-    player_stats = pd.DataFrame(columns=lista_categorias)
+        - pd.DataFrame: Un DataFrame con estadísticas de jugadores.
+    """
+    # Categorías especiales y todas las posibles estadísticas
+    lista_categorias_especiales = [
+        'barridas_ganadas', 'centros', 'duelos_aereos_ganados',
+        'pases_completados', 'pases_largos_completados',
+        'duelos_en_el_suelo_ganados', 'regates', "penales_atajados"
+    ]
+    lista_categorias = name_stats(file_path) 
+    lista_categorias.extend(lista_categorias_especiales)
+    player_stats = pd.DataFrame(columns=lista_categorias)  # DataFrame principal
+
     # Cargar el archivo JSON
     with open(file_path, 'r') as f:
         data = json.load(f)
 
-    # Acceder a homeCompetitor y awayCompetitor
-    match_id = int(data.get('id'))
+    match_id = int(data.get('id', 0))  # ID del partido
     for competitor in ['homeCompetitor', 'awayCompetitor']:
         if competitor in data:
-            team_id = int(data[competitor].get('id'))
+            team_id = int(data[competitor].get('id', 0))  # ID del equipo
             members = data[competitor].get('lineups', {}).get("members", [])
-            # Recorrer cada miembro en members
+            
             for member in members:
-                stats = member.get('stats', {})
+                player_data = dict.fromkeys(lista_categorias, 0)  # Inicializar con 0
+                player_data.update({
+                    'player_id': member.get('id'),
+                    'team_id': team_id,
+                    'match_id': match_id
+                })
 
-                # Crear un diccionario temporal para almacenar las estadísticas del jugador
-                player_data = dict.fromkeys(lista_categorias, 0)  # Inicializa todo en 0
-                player_data['player_id'] = member.get('id')  # Añadir el player_id a la fila
-                player_data["team_id"] = team_id
-                player_data['match_id'] = match_id
-                # Recorrer cada entrada en stats y extraer el valor
+                stats = member.get('stats', [])
                 for stat_data in stats:
-                    total_stat_name = False
-                    stat_name = reemplazar(stat_data.get('name'))
+                    stat_name = reemplazar(stat_data.get('name', ''))
                     stat_value = stat_data.get('value', 0)
-                    player_data[stat_name] = stat_value
 
-                    if stat_name in lista_categorias_especiales:
-                        if isinstance(stat_value, str) and '/' in stat_value:
-                            # Dividir el valor "x/y" en dos partes
-                            values = stat_value.split('/')
-                            try:
-                                stat_value = int(values[0])  # Valor anterior al "/"
-                                total_stat_value = int(values[1].split()[0])  # Valor posterior al "/"
-                                total_stat_name = reemplazar_categoria(stat_name) 
-                            except ValueError:
-                                stat_value = 0
-                                total_stat_value = 0
-
-                    # Asignar los valores a player_data
-                    if stat_name in player_data:
-                        player_data[stat_name] = stat_value
-                        if total_stat_name:
-                            player_data[total_stat_name] = total_stat_value
-                    
-                    if stat_name == 'minutes':
+                    if stat_name in lista_categorias_especiales and isinstance(stat_value, str) and '/' in stat_value:
                         try:
-                            stat_value = int(stat_value.replace("'", ""))
+                            values = stat_value.split('/')
+                            player_data[stat_name] = int(values[0])
+                            player_data[reemplazar_categoria(stat_name)] = int(values[1].split()[0])
                         except ValueError:
-                            stat_value = 0  # Asignar 0 si el valor no es convertible a entero
+                            player_data[stat_name] = 0
+                            player_data[reemplazar_categoria(stat_name)] = 0
+                    elif stat_name == 'minutes':
+                        try:
+                            player_data[stat_name] = int(stat_value.replace("'", ""))
+                        except ValueError:
+                            player_data[stat_name] = 0
+                    elif stat_name == 'goles':
+                        try:
+                            player_data[stat_name] = int(stat_value.split("(")[0])
+                        except ValueError:
+                            player_data[stat_name] = 0
+                    else:
+                        try:
+                            player_data[stat_name] = float(stat_value)
+                        except ValueError:
+                            player_data[stat_name] = 0
 
-                    if stat_name == "goles":
-                        stat_value = int(stat_value.split("(")[0])
-                    player_data[stat_name] = stat_value
-
+                # Crear DataFrame temporal y concatenar
                 player_df = pd.DataFrame([player_data])
-                player_stats.fillna(0, inplace=True)     
-                # Añadir la fila al DataFrame principal usando pd.concat
-                player_stats = pd.concat([player_stats, player_df], ignore_index=True)   
-    return player_stats
+                player_stats = pd.concat([player_stats, player_df], ignore_index=True)
+    with open("dataframe.csv" , "w") as writer:
+        player_stats.to_csv(writer)
+    return player_stats.fillna(0)  # Retornar DataFrame final
+
+extract_stats("/home/sp3767/Documents/football_data/bundesliga/2024_2025/match_data/1/1.json")
 
 # Constructor de team dataframe
 def teams(file_path, season_id):
@@ -319,6 +320,7 @@ def dataframe_teams(folder_path, season_id, league_name):
         on="team_name", 
         how="left"
     )
+    df_teams = df_teams.drop_duplicates(subset=['team_id', 'season_id'])
     return df_teams
 
 def create_player_dataframe(competition_name, season_name, season_id, matchday):
@@ -367,7 +369,6 @@ def create_player_dataframe(competition_name, season_name, season_id, matchday):
     except Exception as e:
         print(f"Error al crear el DataFrame de players: {e}")
         return None
-
 #match details and player stats
 
 def dataframe_stats_match(competition_name, season_name, season_id, matchday):

@@ -17,6 +17,7 @@ from modules.connector import (
 )
 from modules.utils_dataframe import (
     extractor_data_match,
+    extractor_data_match_checker,
     folder_creation_competition,
     folder_creation_season,
 )
@@ -97,10 +98,10 @@ def season_main_menu(season_options, competition_id, competition_name):
                 season_choice = int(input("Selecciona una temporada: "))
                 selected_season = list(season_list[season_choice - 1])
                 matchdays = list(get_matchday(connection, selected_season[0]))
-            
-            if len(matchdays) < 1:
-                matchdays = int(input("Ingresa el número de jornadas: "))
-                insert_matchdays(connection, matchdays, selected_season[0])
+                if len(matchdays) < 1:
+                    matchdays = int(input("Ingresa el número de jornadas: "))
+                    insert_matchdays(connection, matchdays, selected_season[0])
+                    
             selected_teams = [None, None]
             selected_season_menu(selected_season, selected_teams, competition_name)
 
@@ -121,19 +122,20 @@ def season_main_menu(season_options, competition_id, competition_name):
 def selected_season_menu(selected_season, selected_teams, competition_name):
     season_id = int(selected_season[0])
     season_name = selected_season[2]
-    folder_path = f"/home/sp3767/Documents/football_data/{competition_name}/{season_name}/jornadas"
+    folder_path = config['folder_path_matchday'].format(competition_name=competition_name,season_name=season_name)
+    folder_path_checker = config['folder_path_match_data'].format(competition_name=competition_name,season_name=season_name)
     try:
         matchday_id, last_insert_date, days_since_update = get_matchday_information(connection, season_id)
         matchday = int(matchday_id) - season_id * 50
         print(f"Ultimo Matchday añadido: {matchday}\nFecha: {last_insert_date}\nDías desde última actualización:{days_since_update}")
     except:
         matchday = 0
-        extractor_data_match(competition_name, season_name, folder_path, matchday)
+        extractor_data_match(competition_name, season_name, folder_path, extractor_data_match_checker(folder_path_checker))
         insert_teams(connection, competition_name, season_name, season_id)
         print("No hay jornadas disponibles.")
     season_submenu_options = int(input("1. Actualizar información\n2. Regresar al menu principal. \nSelecciona una opción: "))
     if season_submenu_options == 1:
-        extractor_data_match(competition_name, season_name, folder_path, matchday)
+        extractor_data_match(competition_name, season_name, folder_path, extractor_data_match_checker(folder_path_checker))
         try:
             update_season(connection, competition_name, season_name, season_id, matchday)
         except:

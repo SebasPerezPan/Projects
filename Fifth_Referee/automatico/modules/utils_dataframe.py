@@ -2,6 +2,7 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 from collections import deque
 import json
 import os
+import re
 import time
 from threading import Lock
 
@@ -11,9 +12,20 @@ import pandas as pd
 from rapidfuzz import process, fuzz
 import requests
 
+pd.set_option('display.max_columns', None)
+pd.set_option('display.max_rows', None)
+
 scraper = ls.ThreeSixFiveScores()
 
-connection = sql.connect(user='root', password="1104",host="localhost",database="football_project")
+with open('/home/sp3767/Documents/files/credentials.json') as f:
+    config = json.load(f)
+
+connection = sql.connect(
+    user=config['DB_USER'],
+    password=config['DB_PASSWORD'],
+    host=config['DB_HOST'],
+    database=config['DB_NAME']
+    )
 
 def extractor_data_match(competition_name, season_name, folder_path, matchday):
     """
@@ -56,6 +68,27 @@ def extractor_data_match(competition_name, season_name, folder_path, matchday):
                         print(f"la jornada {file_matchday} fue extraída exitosamente.")
                 except Exception as e:
                     print(f"Error procesando {file_path}: {e}")
+
+def extractor_data_match_checker(folder_path):
+
+    # Obtener la lista de carpetas dentro del path
+    items = os.listdir(folder_path)
+    folders = [item for item in items if os.path.isdir(os.path.join(folder_path, item))]
+
+    # Filtrar las carpetas que son números
+    numbered_folders = []
+    for folder in folders:
+        try:
+            number = int(folder)  # Intentar convertir el nombre de la carpeta a un número
+            numbered_folders.append(number)
+        except ValueError:
+            continue  # Ignorar carpetas que no sean números
+    # Si no hay carpetas numeradas, devolver None o lanzar una excepción
+    if not numbered_folders:
+        return 0
+
+    # Encontrar y devolver el mayor número
+    return max(numbered_folders)
 
 def folder_creation_competition(competition_id):
     ruta_carpeta = f'/home/sp3767/Documents/football_data/{competition_id}' 
@@ -169,11 +202,11 @@ def filter_existing_players(connection, df):
     return df_filtered
 
 headers = {
-    "X-Auth-Token": "29cbdb8981dd48d1ac959b8afa454291"
+    "X-Auth-Token": config["X-Auth-Token"]
 }
 url = "https://api.football-data.org/v4/competitions/"
 
-def obtener_dataframe_liga(nombre_liga, max_requests=6, period=60, max_workers=5):
+def obtener_dataframe_liga(nombre_liga, max_requests=5, period=60, max_workers=5):
     """
     Extrae un DataFrame con información de los equipos de una liga específica.
     Incluye manejo del límite de solicitudes a la API y limpieza de la columna 'city'.
@@ -188,9 +221,8 @@ def obtener_dataframe_liga(nombre_liga, max_requests=6, period=60, max_workers=5
         pd.DataFrame: DataFrame con información de los equipos (nombre, ciudad, estadio).
     """
     # Configuración
-    headers = {"X-Auth-Token": "29cbdb8981dd48d1ac959b8afa454291"}
+    headers = {"X-Auth-Token": config["X-Auth-Token"]}
     timestamps = deque()
-
     def rate_limit():
         """Gestiona el límite de solicitudes usando una cola de tiempos."""
         current_time = time.time()
@@ -209,7 +241,8 @@ def obtener_dataframe_liga(nombre_liga, max_requests=6, period=60, max_workers=5
     if response.status_code != 200:
         print(f"Error al obtener competiciones: {response.status_code}")
         return pd.DataFrame()
-
+    if nombre_liga == "la_liga" or nombre_liga == "la liga":
+        nombre_liga = "primera division"
     competiciones = response.json()
     id_competicion = next((c['id'] for c in competiciones['competitions']
                           if c['name'].lower() == nombre_liga.lower()), None)
@@ -258,18 +291,24 @@ def obtener_dataframe_liga(nombre_liga, max_requests=6, period=60, max_workers=5
     print("Generando DataFrame final...")
     df = pd.DataFrame(resultados)
 
-    # 5. Limpiar la columna 'city' para obtener la penúltima palabra
     def extraer_ciudad(direccion):
         """
-        Extrae la penúltima palabra de una dirección.
+        Extrae la ciudad de una dirección, que se encuentra justo antes del código postal.
+        Si no se encuentra un código postal, devuelve 'Desconocido'.
         """
         if direccion == 'N/A' or not isinstance(direccion, str):
             return 'Desconocido'
-        partes = direccion.split()
-        return partes[-2] if len(partes) >= 2 else partes[-1]
-
+        
+        # Buscar un patrón de código postal (4 o más dígitos al final de la dirección)
+        match = re.search(r'(\b[a-zA-ZáéíóúÁÉÍÓÚñÑ]+)\s+(\d{4,})\b', direccion)
+        if match:
+            # La ciudad está en el grupo 1
+            return match.group(1)
+        
+        return 'Desconocido'
+    print(df)
+    # Aplicar la función al DataFrame
     df['city'] = df['city'].apply(extraer_ciudad)
-
     return df
 
 def emparejar_equipos(df1, df2, columna_df1, columna_df2, umbral_similitud=50):
@@ -306,3 +345,4 @@ def emparejar_equipos(df1, df2, columna_df1, columna_df2, umbral_similitud=50):
 
     # Crear un DataFrame con los resultados
     return pd.DataFrame(resultados)
+

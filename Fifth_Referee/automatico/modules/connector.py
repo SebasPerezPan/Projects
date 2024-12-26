@@ -10,8 +10,9 @@ from modules.dataframe_builder import (
     dataframe_stats_match,
     dataframe_teams
 )
-pd.set_option('display.max_columns', None)
-pd.set_option('display.max_rows', None)
+
+# pd.set_option('display.max_columns', None)
+# pd.set_option('display.max_rows', None)
 
 with open('/home/sp3767/Documents/files/credentials.json') as f:
     config = json.load(f)
@@ -219,16 +220,32 @@ def insert_player_stats(connection, dataframe):
         dataframe = dataframe[~dataframe['key'].isin(existing_stats)]
         dataframe.drop(columns=['key'], inplace=True)
 
-        # Insertar filas si existen registros nuevos
+                
         if not dataframe.empty:
             insert_query = """
-            INSERT INTO player_stats (player_id, team_id, match_id, goles, asistencias, pases_claves, goles_recibidos, season_id)
-            VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
+            INSERT INTO player_stats (player_id, team_id, match_id, goles, asistencias, pases_claves, season_id, big_chances_scored, centros, centros_totales, chances_perdidas,
+             despejes, faltas_cometidas, faltas_recibidas, fueras_de_juego, goles_esperados,
+            goles_recibidos, grandes_chances, intercepciones, minutes, pases_completados,
+            pases_en_el_ultimo_tercio, pases_hacia_atras, pases_largos_completados, pases_largos_totales,
+            pases_totales, pelotas_al_poste, penal_fallado, penales_atajados, penales_cometidos,
+            penales_ganados, penales_totales, regateado, regates, regates_totales, remates_a_puerta,
+            remates_bloqueados, remates_fuera, salvadas_de_portero, toques, total_remates)
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, 
+                        %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, 
+                        %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, 
+                        %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
             """
-            data_to_insert = dataframe[['player_id', 'team_id', 'match_id', 'goles', 'asistencias', 'pases_claves', 'goles_recibidos', 'season_id']].values.tolist()
+            columnas_ordenadas = ['player_id', 'team_id', 'match_id', 'goles', 'asistencias', 'pases_claves', 'season_id', 'big_chances_scored', 'centros', 'centros_totales',
+                'chances_perdidas', 'despejes','faltas_cometidas', 'faltas_recibidas', 'fueras_de_juego', 'goles_esperados', 'goles_recibidos',
+                'grandes_chances', 'intercepciones', 'minutes', 'pases_completados',
+                'pases_en_el_ultimo_tercio', 'pases_hacia_atras', 'pases_largos_completados',
+                'pases_largos_totales', 'pases_totales', 'pelotas_al_poste', 'penal_fallado',
+                'penales_atajados', 'penales_cometidos', 'penales_ganados', 'penales_totales'
+            , 'regateado', 'regates', 'regates_totales', 'remates_a_puerta', 'remates_bloqueados', 'remates_fuera', 'salvadas_de_portero', 'toques', 'total_remates' ]
+            dataframe = dataframe[columnas_ordenadas]
+            data_to_insert = dataframe.values.tolist()
             cursor.executemany(insert_query, data_to_insert)
             connection.commit()
-            print(f"{len(data_to_insert)} filas insertadas correctamente en la tabla 'player_stats'.")
         else:
             print("No hay filas nuevas para insertar en 'player_stats'.")
 
@@ -240,6 +257,7 @@ def insert_player_stats(connection, dataframe):
         connection.rollback()
     finally:
         cursor.close()
+
 
 # Match Stats
 
