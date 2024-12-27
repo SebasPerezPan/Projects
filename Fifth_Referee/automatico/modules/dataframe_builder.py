@@ -182,8 +182,6 @@ def extract_stats(file_path):
                 # Crear DataFrame temporal y concatenar
                 player_df = pd.DataFrame([player_data])
                 player_stats = pd.concat([player_stats, player_df], ignore_index=True)
-    with open("dataframe.csv" , "w") as writer:
-        player_stats.to_csv(writer)
     return player_stats.fillna(0)  # Retornar DataFrame final
 
 extract_stats("/home/sp3767/Documents/football_data/bundesliga/2024_2025/match_data/1/1.json")

@@ -1,8 +1,6 @@
 from math import pi
-
 import pandas as pd
 from IPython.display import display, HTML
-
 from bokeh.io import output_notebook, show
 from bokeh.layouts import column, gridplot, row
 from bokeh.models import (
@@ -34,19 +32,18 @@ class Season:
         """
         cursor = connection.cursor()
 
-        # Obtener equipos de la temporada (sin cambios)
         query_teams = """
-        SELECT team_id, team_name
+        SELECT team_id, team_name, stadium, city
         FROM team
         WHERE season_id = %s
         """
         cursor.execute(query_teams, (self.season_id,))
         teams_data = cursor.fetchall()
 
-        # Crear diccionario para mapear team_id a team_name
-        teams_dict = {team_id: team_name for team_id, team_name in teams_data}
-
-        # Obtener jugadores y estadísticas básicas (actualizado)
+        # Crear diccionario para mapear team_id a información extendida
+        
+        teams_dict = {team_id: (team_name, stadium, city) for team_id, team_name, stadium, city in teams_data}            # Obtener jugadores y estadísticas básicas (actualizado)
+        
         query_players = """
         SELECT p.player_id, p.team_id, p.player_name, p.jersey_number, p.season_id, p.position,
             SUM(ps.goles) as goles, SUM(ps.asistencias) as asistencias,
@@ -94,11 +91,13 @@ class Season:
             players_by_team[team_id].append(player_obj)
 
         # Construir los equipos con los jugadores
-        for team_id, team_name in teams_dict.items():
+        for team_id, (team_name, stadium, city) in teams_dict.items():
             team_players = players_by_team.get(team_id, [])
             team_obj = Team(
                 team_id=team_id,
                 team_name=team_name,
+                stadium=stadium,
+                city=city,
                 season_id=self.season_id,
                 players=team_players,
                 season=self  # Referencia a la temporada actual
@@ -106,7 +105,6 @@ class Season:
             self.teams.append(team_obj)
 
         cursor.close()
-
 
     def load_matches_and_assign_to_teams(self, connection):
         """
@@ -144,18 +142,83 @@ class Season:
             # Asignar el partido al equipo local
             if home_team_id in teams_by_id:
                 teams_by_id[home_team_id].matches.append(match_obj)
-            else:
-                print(f"Equipo local con ID {home_team_id} no encontrado en los equipos.")
 
             # Asignar el partido al equipo visitante
             if away_team_id in teams_by_id:
                 teams_by_id[away_team_id].matches.append(match_obj)
-            else:
-                print(f"Equipo visitante con ID {away_team_id} no encontrado en los equipos.")
 
         cursor.close()
 
 ## Metodos.
+
+    def calculate_standings(self):
+        # Constantes para índices en las sublistas de equipos
+        TEAM_ID = 0
+        STANDING = 1
+        WINS = 2
+        LOSSES = 3
+        DRAWS = 4
+        GOALS = 5
+        GOALS_CONCEDED = 6
+
+        # Inicializar estructura temporal para las estadísticas de los equipos
+        team_stats = [
+            [team.team_id, 0, [0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0]]  # [team_id, standing, wins, losses, draws, goals, goals_conceded]
+            for team in self.teams
+        ]
+
+        # Crear un diccionario para optimizar la búsqueda de estadísticas
+        team_stats_dict = {team.team_id: stats for team, stats in zip(self.teams, team_stats)}
+
+        # Recorrer todos los partidos asociados a los equipos de la temporada
+        for team in self.teams:
+            for match in team.matches:
+                # Identificar si el equipo es local o visitante
+                if match.home_team_id == team.team_id:
+                    home_team_stats = team_stats_dict[match.home_team_id]
+                    home_team_stats[GOALS][0] += match.home_score  # Goles de local
+                    home_team_stats[GOALS_CONCEDED][0] += match.away_score  # Goles concedidos de local
+                    if match.home_score > match.away_score:
+                        home_team_stats[WINS][0] += 1  # Victoria de local
+                    elif match.home_score < match.away_score:
+                        home_team_stats[LOSSES][0] += 1  # Derrota de local
+                    else:
+                        home_team_stats[DRAWS][0] += 1  # Empate de local
+
+                if match.away_team_id == team.team_id:
+                    away_team_stats = team_stats_dict[match.away_team_id]
+                    away_team_stats[GOALS][1] += match.away_score  # Goles de visitante
+                    away_team_stats[GOALS_CONCEDED][1] += match.home_score  # Goles concedidos de visitante
+                    if match.away_score > match.home_score:
+                        away_team_stats[WINS][1] += 1  # Victoria de visitante
+                    elif match.away_score < match.home_score:
+                        away_team_stats[LOSSES][1] += 1  # Derrota de visitante
+                    else:
+                        away_team_stats[DRAWS][1] += 1  # Empate de visitante
+
+        # Actualizar los atributos de cada equipo con los datos calculados
+        for team, stats in zip(self.teams, team_stats):
+            team.standing = stats[STANDING]  # La posición se mantendrá en el atributo de la clase
+            team.wins = sum(stats[WINS])  # Sumar victorias de local y visitante
+            team.losses = sum(stats[LOSSES])  # Sumar derrotas de local y visitante
+            team.draws = sum(stats[DRAWS])  # Sumar empates de local y visitante
+            team.goals = [sum(stats[GOALS][0:1]), sum(stats[GOALS][1:2])]  # Goles de local y visitante
+            team.goals_conceded = [sum(stats[GOALS_CONCEDED][0:1]), sum(stats[GOALS_CONCEDED][1:2])]  # Goles concedidos de local y visitante
+
+        # Ahora ordenamos los equipos por puntos, diferencia de goles, y goles a favor
+        self.teams.sort(key=lambda team: (
+            team.wins * 3 + team.draws,  # Puntos
+            (sum(team.goals) - sum(team.goals_conceded)),  # Diferencia de goles
+            sum(team.goals)  # Goles a favor
+        ), reverse=True)
+
+        # Actualizamos la posición de cada equipo después de ordenar
+        for position, team in enumerate(self.teams, start=1):
+            team.standing = position  # Actualizar la posición en el standing
+
+        # Limpiar las variables temporales de la memoria
+        del team_stats
+        del team_stats_dict
 
     def display_top_players(self, top_n=10):
         """
@@ -305,34 +368,6 @@ class Season:
         layout = column(select, p)
         show(layout)
 
-    def calculate_standings(self, matchday):
-        # Lógica para obtener y calcular los datos hasta el matchday especificado
-        standings = []
-        for team in self.teams:
-            matches = [match for match in team.matches if match.matchday_id <= matchday]
-            pj = len(matches)  # Partidos Jugados
-            pg = sum(1 for match in matches if match.home_team_id == team.team_id and match.home_score > match.away_score or 
-                    match.away_team_id == team.team_id and match.away_score > match.home_score)
-            pe = sum(1 for match in matches if match.home_score == match.away_score)
-            pp = pj - pg - pe
-            gf = sum(match.home_score if match.home_team_id == team.team_id else match.away_score for match in matches)
-            gc = sum(match.away_score if match.home_team_id == team.team_id else match.home_score for match in matches)
-            dg = gf - gc
-            puntos = pg * 3 + pe
-            standings.append({
-                "Posicion": "",  # Se calculará después del ordenamiento
-                "Equipo": team.team_name,
-                "PJ": pj, "PG": pg, "PE": pe, "PP": pp,
-                "GF": gf, "GC": gc, "DG": dg, "Puntos": puntos
-            })
-
-        standings = sorted(standings, key=lambda x: (-x['Puntos'], -x['DG'], -x['GF']))
-        for i, row in enumerate(standings):
-            row["Posicion"] = str(i + 1)
-
-        return pd.DataFrame(standings)
-    
-
     def display_standings(self):
         """
         Muestra una tabla interactiva de clasificación, permitiendo seleccionar la jornada.
@@ -391,28 +426,25 @@ class Season:
         show(layout)
 
 class Team:
-    def __init__(self, team_id, team_name, season_id, players=None, matches=None, season=None):
+    
+    def __init__(self, team_id, team_name, stadium, city, season_id, players=None, season=None):
         self.team_id = team_id
         self.team_name = team_name
+        self.stadium = stadium
+        self.city = city
         self.season_id = season_id
-        self.players = players if players else []
-        self.matches = matches if matches else []
-        self.season = season  # Referencia a la instancia de Season
+        self.players = players or []
+        self.season = season
+        self.matches = []
+        self.standing = 0  # Posición en la tabla
+        self.wins = [0, 0]  # [local_wins, away_wins]
+        self.losses = [0, 0]  # [local_losses, away_losses]
+        self.draws = [0, 0]  # [local_draws, away_draws]
+        self.goals = [0, 0]  # [home_goals, away_goals]
+        self.goals_conceded = [0, 0]  # [home_goals_conceded, away_goals_conceded]
 
-    # def display_team_summary(self):
-    #     """
-    #     Muestra un resumen del equipo con estadísticas agregadas de los jugadores.
-    #     """
-    #     total_goals = sum(player.stats.get('goles', 0) for player in self.players)
-    #     total_assists = sum(player.stats.get('asistencias', 0) for player in self.players)
-    #     total_key_passes = sum(player.stats.get('pases_claves', 0) for player in self.players)
-    #     total_goals_conceded = sum(player.stats.get('goles_recibidos', 0) for player in self.players)
-
-    #     print(f"\nEquipo: {self.team_name}")
-    #     print(f"Total de Goles: {total_goals}")
-    #     print(f"Total de Asistencias: {total_assists}")
-    #     print(f"Pases Claves Totales: {total_key_passes}")
-    #     print(f"Goles Recibidos Totales: {total_goals_conceded}")
+    def __str__(self):
+        return f"\n{self.team_name} ({self.city}) - Posición: {self.standing}, Goles: {sum(self.goals)}, Goles Concedidos: {sum(self.goals_conceded)}"
 
     def display_players(self):
         """
@@ -989,3 +1021,72 @@ class Match:
         self.home_score = home_score
         self.away_score = away_score
         self.duration = duration
+
+class Versus:
+    def __init__(self, home_team_id, away_team_id, standings):
+        self.home_team_id = home_team_id
+        self.away_team_id = away_team_id
+        self.standings = standings
+        
+    def check_derby(self, teams_info):
+        """
+        Verifica si el enfrentamiento es un derbi (mismos equipos en la misma ciudad).
+
+        Parámetros:
+        - teams_info (pd.DataFrame): DataFrame con información de equipos (team_id, city).
+
+        Retorna:
+        - bool: True si es un derbi, False en caso contrario.
+        """
+        home_city = teams_info.loc[teams_info['team_id'] == self.home_team_id, 'city'].values[0]
+        away_city = teams_info.loc[teams_info['team_id'] == self.away_team_id, 'city'].values[0]
+        
+        return home_city == away_city
+
+    def analyze_match(self):
+        """
+        Analiza la diferencia de posiciones entre los equipos en las standings.
+
+        Retorna:
+        - str: Una categoría de dificultad del partido.
+        """
+        home_team_position = self.standings.loc[self.standings['Equipo'] == self.home_team_id, 'Posicion'].astype(int).values[0]
+        away_team_position = self.standings.loc[self.standings['Equipo'] == self.away_team_id, 'Posicion'].astype(int).values[0]
+
+        position_diff = abs(home_team_position - away_team_position)
+
+        if position_diff > 15:
+            return "Partido fácil"
+        elif position_diff < 4:
+            return "Partido difícil"
+        elif home_team_position > 10 and away_team_position > 10:
+            return "Accesible"
+        elif home_team_position <= 4 and away_team_position <= 10:
+            return "Manejable"
+        else:
+            return "Neutro"
+
+    def display_analysis(self, teams_info):
+        """
+        Muestra el análisis del partido usando Matplotlib.
+
+        Parámetros:
+        - teams_info (pd.DataFrame): DataFrame con información de equipos (team_id, team_name, city).
+        """
+        import matplotlib.pyplot as plt
+
+        home_team_name = teams_info.loc[teams_info['team_id'] == self.home_team_id, 'team_name'].values[0]
+        away_team_name = teams_info.loc[teams_info['team_id'] == self.away_team_id, 'team_name'].values[0]
+
+        derby = self.check_derby(teams_info)
+        analysis = self.analyze_match()
+
+        title = f"Análisis del partido: {home_team_name} vs {away_team_name}"
+        subtitle = f"Categoría: {analysis} {'(Derbi)' if derby else ''}"
+
+        # Crear el gráfico
+        fig, ax = plt.subplots(figsize=(8, 4))
+        ax.text(0.5, 0.6, title, ha='center', va='center', fontsize=14, fontweight='bold')
+        ax.text(0.5, 0.4, subtitle, ha='center', va='center', fontsize=12)
+        ax.axis('off')
+        plt.show()
