@@ -1,0 +1,7 @@
+<nav id="menu">
+    <ul class="flex space-x-4"> 
+        <li><a href="ventas.html" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Iniciar Venta</a></li>
+        <li><a href="inventario.html" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">Gestionar Inventario</a></li>
+        <li><a href="estadisticas.html" class="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded">Estadisticas</a></li>
+    </ul>
+</nav>
